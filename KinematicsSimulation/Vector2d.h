@@ -2,44 +2,51 @@
 #define _VECTOR2D_H_
 #pragma once
 #include<math.h>
+template<class T>
 class Vector2D
 {
-	friend Vector2D operator+(const Vector2D &v1, const Vector2D &v2);
-	friend Vector2D operator-(const Vector2D &v1, const Vector2D &v2);
-	friend Vector2D operator*(const Vector2D &v1, const Vector2D &v2);
-	friend Vector2D operator*(const double &d1, const Vector2D &v2);
-	friend Vector2D operator/(const Vector2D &v2, const double &d1);
+public:
+	template<class T>
+	friend Vector2D<T> operator+(const Vector2D< T> &v1, const Vector2D< T> &v2);
+	template<class T>
+	friend Vector2D<T> operator-(const Vector2D< T> &v1, const Vector2D< T> &v2);
+	template<class T>
+	friend Vector2D<T> operator*(const Vector2D<T> &v1, const Vector2D<T> &v2);
+	template<class T>
+	friend Vector2D<T> operator*(const T &d1, const Vector2D<T> &v2);
+	template<class T>
+	friend Vector2D<T> operator/(const Vector2D< T> &v2, const T &d1);
 public:
 	Vector2D();
-	Vector2D(const double &x, const double &y) :x(x), y(y){}
+	Vector2D(const T &x, const T &y) :x(x), y(y){}
 	~Vector2D();
-	double getx()
+	T getx()
 	{
 		return x;
 	}
-	double gety()
+	T gety()
 	{
 		return y;
 	}
-	void addx(double var)
+	void addx(T var)
 	{
 		x = x + var;
 	}
-	void addy(double var)
+	void addy(T var)
 	{
 		y = y + var;
 	}
-	double length()
+	T length()
 	{
 		return sqrt(x*x + y*y);
 	}
-	double sqrLength()
+	T sqrLength()
 	{
 		return x*x + y*y;
 	}
 	Vector2D nomorlize()
 	{
-		double var = 1 / length();
+		T var = 1 / length();
 		return Vector2D(x*var, y*var);
 	}
 	void negtive()
@@ -65,12 +72,12 @@ public:
 		x = x - v.x;
 		y = y - v.y;
 	}
-	void multiply(double var)
+	void multiply(T var)
 	{
 		x = x*var;
 		y = y*var;
 	}
-	void devide(double var)
+	void devide(T var)
 	{
 		x = x / var;
 		y = y / var;
@@ -84,4 +91,46 @@ private:
 	double x;
 	double y;
 };
+
+template<class T>
+Vector2D<T>::Vector2D()
+{
+
+}
+template<class T>
+Vector2D< T>::~Vector2D()
+{
+
+}
+
+template<class T>
+Vector2D< T> operator+(const Vector2D<T> &v1, const Vector2D<T> &v2)
+{
+	return Vector2D< T>(v1.x + v2.x, v1.y + v2.y);
+}
+
+template<class T>
+Vector2D<T> operator-(const Vector2D<T> &v1, const Vector2D<T> &v2)
+{
+	return Vector2D<T>(v1.x - v2.x, v1.y - v2.y);
+}
+
+template<class T>
+Vector2D<T> operator*(const Vector2D<T> &v1, const Vector2D<T> &v2)
+{
+	return Vector2D< T>(v1.x * v2.x, v1.y * v2.y);
+}
+
+template<class T>
+Vector2D< T> operator*(const T &d1, const Vector2D< T> &v2)
+{
+	return Vector2D< T>(d1 * v2.x, d1* v2.y);
+}
+
+template<class T>
+Vector2D<T> operator/(const Vector2D<T> &v2, const T &d1)
+{
+	return Vector2D<T>(v2.x / d1, v2.y / d1);
+}
+
 #endif

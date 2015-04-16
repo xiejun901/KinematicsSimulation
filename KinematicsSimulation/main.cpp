@@ -8,6 +8,10 @@ int WINAPI WinMain(
 	)
 {
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
+	Vector2D<float> v1(2.0, 3.0);
+	Vector2D<float> v2(2.0, 3.0);
+	Vector2D<float> v3;
+	v3 = v1 + v2;
 
 	if (SUCCEEDED(CoInitialize(NULL)))
 	{

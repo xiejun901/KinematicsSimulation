@@ -5,12 +5,12 @@
 class Particle
 {
 public:
-	Vector2D position;
-	Vector2D velocity;
-	Vector2D acceleration;
+	Vector2D<double> position;
+	Vector2D<double> velocity;
+	Vector2D<double> acceleration;
 	double radius;
 public:
-	Particle(Vector2D p, Vector2D v, Vector2D a, double r):position(p), velocity(v), acceleration(a), radius(r){}
+	Particle(Vector2D<double> p, Vector2D<double> v, Vector2D<double> a, double r) :position(p), velocity(v), acceleration(a), radius(r){}
 	Particle(){}
 	~Particle(){}
 };

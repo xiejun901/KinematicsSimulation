@@ -30,7 +30,7 @@ HRESULT MainWindow::Initialize()
 	//position = Vector2D(100.0L, 100.0L);
 	//velocity = Vector2D(100.0L, -100.0L);
 	//acceleration = Vector2D(0.0L, 200.0L);
-	m_Paricle = Particle(Vector2D(100.0L, 100.0L), Vector2D(100.0L, -100.0L), Vector2D(0.0L, 200.0L), 20.0);
+	m_Paricle = Particle(Vector2D<double>(100.0L, 100.0L), Vector2D<double>(100.0L, 0.0L), Vector2D<double>(0.0L, 300.0L), 10.0);
 	hr = CreateDeviceIndependentResources();
 	if (SUCCEEDED(hr))
 	{
