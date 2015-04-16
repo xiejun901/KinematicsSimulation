@@ -6,6 +6,7 @@
 
 #include<stdlib.h>
 #include<math.h>
+#include<vector>
 
 #include<d2d1.h>
 #include <d2d1helper.h>
@@ -60,6 +61,8 @@ private:
 	*/
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void OnTimer();
+	void emitParitcle(Particle);
+	void drawParticleContainer(D2D1_SIZE_F rtSize);
 private:
 	HWND m_hwnd;
 	ID2D1Factory *m_pDirect2dFactory;//
@@ -73,6 +76,8 @@ private:
 	//Vector2D velocity;// = Vector2D(50.0L, -1.0*50.0L);
 	//Vector2D acceleration;// = Vector2D(0.0L, 10.0L);
 	Particle m_Paricle;
+	std::vector<Particle> m_ParicleContainer;
+	int clocktime;
 };
 
 #endif

@@ -27,10 +27,9 @@ void MainWindow::RunMessageLoop()
 HRESULT MainWindow::Initialize()
 {
 	HRESULT hr;
-	//position = Vector2D(100.0L, 100.0L);
-	//velocity = Vector2D(100.0L, -100.0L);
-	//acceleration = Vector2D(0.0L, 200.0L);
-	m_Paricle = Particle(Vector2D<double>(100.0L, 100.0L), Vector2D<double>(100.0L, 0.0L), Vector2D<double>(0.0L, 300.0L), 10.0);
+	//m_Paricle = Particle(Vector2D<float>(100.0f, 100.0f), Vector2D<float>(100.0f, 0.0f), Vector2D<float>(0.0f, 300.0f), 10.0f);
+	m_ParicleContainer.push_back(Particle(Vector2D<float>(100.0f, 100.0f), Vector2D<float>(100.0f, 0.0f), Vector2D<float>(0.0f, 300.0f), 10.0f));
+	clocktime = 0;
 	hr = CreateDeviceIndependentResources();
 	if (SUCCEEDED(hr))
 	{
@@ -80,8 +79,6 @@ HRESULT MainWindow::Initialize()
 			ShowWindow(m_hwnd, SW_SHOWNORMAL);
 			UpdateWindow(m_hwnd);
 		}
-		//DWORD m_starttine = GetTickCount();
-		//DWORD m_starttine2 = GetTickCount();
 	}
 	return hr;
 }
@@ -202,49 +199,14 @@ HRESULT MainWindow::OnRender()
 		m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 		//检测呈现器的绘制区域大小
 		D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
-		int width = static_cast<int>(rtSize.width);
-		int height = static_cast<int>(rtSize.height);
-
-		m_Paricle.position = m_Paricle.position + 1.0 / 60.0*m_Paricle.velocity;
-		m_Paricle.velocity = m_Paricle.velocity + 1.0 / 60.0*m_Paricle.acceleration;
-		//const float x = m_Paricle.position.getx();
-		//const float y = m_Paricle.position.gety();
-		const float r = m_Paricle.radius;
-		if (m_Paricle.position.gety() + r > rtSize.height)
+		clocktime++;
+		if (clocktime == 60)
 		{
-			m_Paricle.velocity.negtivey();
-			m_Paricle.position.addy(rtSize.height - m_Paricle.position.gety() - r);
+			clocktime = 0;
+			m_ParicleContainer.push_back(Particle(Vector2D<float>(100.0f, 100.0f), Vector2D<float>(100.0f, 0.0f), Vector2D<float>(0.0f, 300.0f), 10.0f + static_cast<float>(rand()%20)));
 		}
-		if (m_Paricle.position.gety() - r < 0.0)
-		{
-			m_Paricle.velocity.negtivey();
-			m_Paricle.position.addy(r-m_Paricle.position.gety());
-		}
-		//if (x + r > rtSize.width)
-		//{
-		//	m_Paricle.velocity.negtivex();
-		//}
-		//if (x - r < 0.0)
-		//{
-		//	m_Paricle.velocity.negtivex();
-		//}
-		if (m_Paricle.position.getx() + r > rtSize.width)
-		{
-			m_Paricle.velocity.negtivex();
-			m_Paricle.position.addx(rtSize.width - m_Paricle.position.getx() - r);
-		}
-		if (m_Paricle.position.getx() - r < 0.0)
-		{
-			m_Paricle.velocity.negtivex();
-			m_Paricle.position.addx(r-m_Paricle.position.getx());
-		}
-		const float x = m_Paricle.position.getx();
-		const float y = m_Paricle.position.gety();
-		D2D1_ELLIPSE ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), r, r);
-		m_pRenderTarget->FillEllipse(&ellipse, m_pCornflowerBlueBrush);
-			/****************************************************************/
+		drawParticleContainer(rtSize);
 		hr = m_pRenderTarget->EndDraw();
-		//m_pRenderTarget->Resize(D2D1::SizeU(17, 17));
 
 	}
 	InvalidateRect(m_hwnd, nullptr, false);
@@ -254,4 +216,42 @@ void MainWindow::OnResize(UINT width, UINT height)
 {
 	if (m_pRenderTarget)
 		m_pRenderTarget->Resize(D2D1::SizeU(width, height));
+}
+
+void MainWindow::emitParitcle(Particle p)
+{
+	m_ParicleContainer.push_back(p);
+}
+void MainWindow::drawParticleContainer(D2D1_SIZE_F rtSize)
+{
+	for (auto &particles : m_ParicleContainer)
+	{
+		particles.position = particles.position + 1.0f / 60.0f*particles.velocity;
+		particles.velocity = particles.velocity + 1.0f / 60.0f*particles.acceleration;
+		const float r = particles.radius;
+		if (particles.position.gety() + r > rtSize.height)
+		{
+			particles.velocity.negtivey();
+			particles.position.addy(rtSize.height - particles.position.gety() - r);
+		}
+		if (particles.position.gety() - r < 0.0)
+		{
+			particles.velocity.negtivey();
+			particles.position.addy(r - particles.position.gety());
+		}
+		if (particles.position.getx() + r > rtSize.width)
+		{
+			particles.velocity.negtivex();
+			particles.position.addx(rtSize.width - particles.position.getx() - r);
+		}
+		if (particles.position.getx() - r < 0.0)
+		{
+			particles.velocity.negtivex();
+			particles.position.addx(r - particles.position.getx());
+		}
+		const float x = particles.position.getx();
+		const float y = particles.position.gety();
+		D2D1_ELLIPSE ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), r, r);
+		m_pRenderTarget->FillEllipse(&ellipse, m_pCornflowerBlueBrush);
+	}
 }
